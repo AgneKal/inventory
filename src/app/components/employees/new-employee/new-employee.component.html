@@ -1,0 +1,55 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            Pridėti naują darbuotoją
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="newEmployeeSubmit(f)" #f="ngForm">
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label text-end">Vardas:</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="name" class="form-control" [class.is-invalid]="!inputName.valid && inputName.touched" ngModel required minlength="2" maxlength="32" pattern="[a-zA-Z ]*" #inputName="ngModel">
+                        <div class="helper-block" *ngIf="!inputName.valid && inputName.touched">Vardas yra privalomas, turi būti 2-32 simbolių ilgio, galima įvesti tik raides ir tarpą</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label text-end">Pavardė:</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="surname" class="form-control" [class.is-invalid]="!inputSurname.valid && inputSurname.touched" ngModel required minlength="2" maxlength="32" pattern="[a-zA-Z ]*" #inputSurname="ngModel">
+                        <div class="helper-block" *ngIf="!inputSurname.valid && inputSurname.touched">Pavardė yra privaloma, turi būti 2-32 simbolių ilgio, galima įvesti tik raides ir tarpą</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label text-end">Pozicija:</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="position" class="form-control" [class.is-invalid]="!inputPosition.valid && inputPosition.touched" ngModel required #inputPosition="ngModel">
+                        <div class="helper-block" *ngIf="!inputPosition.valid && inputPosition.touched">Pozicijos laukelis yra privalomas</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label text-end">El.paštas:</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="email" class="form-control" [class.is-invalid]="!inputEmail.valid && inputEmail.touched" ngModel required email #inputEmail="ngModel">
+                        <div class="helper-block" *ngIf="!inputEmail.valid && inputEmail.touched">El. pašto laukelis yra privalomas</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-2 col-form-label text-end">Gimimo metai:</label>
+                    <div class="col-sm-10">
+                        <input type="number" name="birthYear" class="form-control" [class.is-invalid]="!inputBirthYear.valid && inputBirthYear.touched" ngModel required #inputBirthYear="ngModel" birthYearValidator>
+                        <div class="helper-block" *ngIf="!inputBirthYear.valid && inputBirthYear.touched">Gimimo metų laukelis yra privalomas, neankstesni nei 1900 ir darbuotojas privalo būti pilanametis</div>
+                    </div>
+                </div>
+
+                <div class="offset-sm-2">
+                    <button type="submit" class="btn btn-success" [disabled]="!f.valid">Pridėti naują darbuotoją</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
