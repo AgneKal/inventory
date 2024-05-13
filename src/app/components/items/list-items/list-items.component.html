@@ -1,0 +1,38 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            Inventorizuojamų daiktų sąrašas
+        </div>
+        <div class="card-body">
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>Inventorizacijos nr.</th>
+                        <th>Pavadinimas</th>
+                        <th>Tipas</th>
+                        <th>Atsakingas asmuo</th>
+                        <th>Laikymo vietos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of items; let i=index">
+                        <td>{{ item.inv_number }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ (item.type=='t')?'Trumpalaikis turtas':'Ilgalaikis turtas' }}</td>
+                        <td>{{ item.responsible_employee?.name }} {{ item.responsible_employee?.surname }}</td>
+                        <td>
+                            <div *ngFor="let location of item.locations">
+                                {{ location }}
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

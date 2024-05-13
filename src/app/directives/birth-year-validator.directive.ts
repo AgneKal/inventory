@@ -25,6 +25,4 @@ export class BirthYearValidatorDirective implements Validator{
       return null;
     }
   }
-
-
 }

@@ -1,0 +1,70 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            Pridėti naują inventorizuojamą daiktą
+        </div>
+        <div class="card-body">
+            <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label text-end">Inventorizacijos numeris:</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" [class.is-invalid]="!itemForm.get('inv_number')?.valid && itemForm.get('inv_number')?.touched" formControlName="inv_number">
+                        <div class="helper-block" *ngIf="!itemForm.get('inv_number')?.valid && itemForm.get('inv_number')?.touched">Inventorizacijos numeris yra privalomas ir netrumpesnis nei 8 simboliai, šablonas: AAA12345</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label text-end">Pavadinimas:</label>
+                    <div class="col-sm-9">
+                        <input class="form-control" formControlName="name" [class.is-invalid]="!itemForm.get('name')?.valid && itemForm.get('name')?.touched">
+                        <div class="helper-block d-none" *ngIf="!itemForm.get('name')?.valid && itemForm.get('name')?.touched">Vardas yra privalomas, turi būti 2-32 simbolių ilgio, galima įvesti tik raides ir tarpą</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label text-end">Tipas:</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" formControlName="type">
+                            <option value="t">Trumpalaikis turtas</option>
+                            <option value="i">Ilgalaikis turtas</option>
+                        </select>
+                        <div class="helper-block d-none">Privaloma pasirinkti</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label text-end">Atsakingas darbuotojas:</label>
+
+
+                    <div class="col-sm-9">
+                        <select class="form-control" formControlName="responsible_employee_id">
+                            <option *ngFor="let employee of employees; let i=index" [value]="employee.id">{{ employee.name }} {{ employee.surname }}</option>
+                        </select>
+                        <div class="helper-block d-none">Vardas yra privalomas, turi būti 2-32 simbolių ilgio, galima įvesti tik raides ir tarpą</div>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="" class="col-sm-3 col-form-label text-end">Lokacijos:</label>
+                    <div class="col-sm-9">
+                        <div class="row" formArrayName="locations">
+                            <div class="col-sm-12 mb-3" *ngFor="let location of locations; let i = index">
+                                <input type="text" class="form-control" [formControlName]="i">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-secondary me-3" (click)="addLocationField()">Pridėti papildomą lokaciją</button>
+                            <button type="button" class="btn btn-danger" (click)="removeLocationField()">Pašalinti papildomą lokaciją</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+                <div class="mb-3 row">
+                    <div class="col-sm-3 offset-sm-3">
+                        <button class="btn btn-success" [disabled]="!itemForm.valid">Pridėti</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
