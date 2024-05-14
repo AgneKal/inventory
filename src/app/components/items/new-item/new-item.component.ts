@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ItemsService } from '../../../services/items.service';
 import { Employee } from '../../../models/employee';
 import { EmployeesService } from '../../../services/employees.service';
-import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-new-item',
@@ -17,10 +16,18 @@ import { Observable, map } from 'rxjs';
 export class NewItemComponent {
   public itemForm: FormGroup;
   public employees: Employee[]=[];
+  // public lastNumber: number = 0;
 
   constructor(private itemsService: ItemsService, private employeesService: EmployeesService){
     this.itemForm = new FormGroup({
-      'inv_number': new FormControl(null, [Validators.required, Validators.minLength(3), this.validateInvNumber]),
+      // vienoj null apčioj this.lastNumber
+      'inv_number': new FormControl (null,
+        {
+          validators: [Validators.required, this.validateInvNumber],
+          asyncValidators:[ItemsService.createUniqueInvNumberValidator(itemsService)]
+        }
+      ),
+
       'name': new FormControl(null, [Validators.required, Validators.minLength(3)]),
       'type': new FormControl(null),
       'responsible_employee_id': new FormControl(null, Validators.required),
@@ -33,13 +40,22 @@ export class NewItemComponent {
     })
   }
 
+  // private resetForm(){
+  //   this.itemsService.getLastInvNumber().subscribe((n)=>{
+  //     this.lastNumber=n;
+  //     (this.itemForm.get('inv_number') as FormControl).setValue(n);
+  //   });
+  // }
+
   onSubmit(){
-    console.log(this.itemForm);
-    this.itemsService.addItem(this.itemForm.value).subscribe(()=>{})
-    this.itemForm.reset();
-    (this.itemForm.get('locations') as FormArray).controls = [
-      new FormControl(null, Validators.required)
-    ]
+    console.log(this.itemForm.value);
+    this.itemsService.addItem(this.itemForm.value).subscribe(()=>{
+      this.itemForm.reset();
+      (this.itemForm.get('locations') as FormArray).controls=[
+        new FormControl(null, Validators.required)
+      ];
+      // this.resetForm();
+    })
   }
 
   validateInvNumber(control: FormControl): ValidationErrors|null {
@@ -52,26 +68,6 @@ export class NewItemComponent {
       return {error: 'Klaida'}
     }
   }
-
-//   static createUniqueInvNumberValidator(itemsService: ItemsService){
-//     return (control: FormControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-
-//     this.itemsService.loadItem().pipe(map((data)=>null))
-//   }
-// }
-
-//   uniqueInvNumber (control: FormControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-
-//     return this.itemsService.loadItem().pipe(map((data)=>null))
-
-//     // const promise = new Promise<ValidationErrors | null> ((resolve, reject) => {
-//     //   this.itemsService.loadItem().subscribe((data)=> {
-//     //     resolve
-//     //   });
-//     // });
-//     // return promise;
-//   }
-
 
   get locations() {
     return (this.itemForm.get('locations') as FormArray).controls;
