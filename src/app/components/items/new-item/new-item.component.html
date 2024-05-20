@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" [@caption]="captionState" (click)="captionClick()">
             Pridėti naują inventorizuojamą daiktą
         </div>
         <div class="card-body">
@@ -54,7 +54,7 @@
                     <label for="" class="col-sm-3 col-form-label text-end">Lokacijos:</label>
                     <div class="col-sm-9">
                         <div class="row" formArrayName="locations">
-                            <div class="col-sm-12 mb-3" *ngFor="let location of locations; let i=index ">
+                            <div class="col-sm-12 mb-3" *ngFor="let location of locations; let i=index" [@locationInput]>
                                 <input type="text" class="form-control" [formControlName]="i">
                             </div>
 

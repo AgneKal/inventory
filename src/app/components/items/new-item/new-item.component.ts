@@ -4,19 +4,72 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationError
 import { ItemsService } from '../../../services/items.service';
 import { Employee } from '../../../models/employee';
 import { EmployeesService } from '../../../services/employees.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-new-item',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './new-item.component.html',
-  styleUrl: './new-item.component.css'
+  styleUrl: './new-item.component.css',
+  animations: [
+    trigger('caption', [
+      state('normal', style({
+        'color':'#000000'
+      })),
+      state('clicked1', style({
+        'color':'#00ff00'
+      })),
+      state('clicked2', style({
+        'color':'#ff0000'
+      })),
+      transition('* <=> *', [
+        animate(1000)
+      ]),
+    ]),
+    trigger('locationInput',[
+      state("*", style({
+        transform:"translateX(0px) translateY(0px)",
+        height:'38px'
+      })),
+      transition("void => *",[
+        //Aukštis 0 , atvaizduojamas už ekrano ribų
+        style({
+          height:'0px',
+          transform:"translateX(-2000px) translateY(300px)"
+        }),
+        //Išplečiame laisvą vietą iš aukščio
+        animate(500, style({
+          height:'38px',
+          transform:"translateX(-2000px) translateY(300px)"
+        })),
+        //Įvažiuojame į tinkmą vietą
+        animate(1000)
+      ]),
+      transition("* => void",[
+        //Aukštis 0 , atvaizduojamas už ekrano ribų
+
+        animate(1000, style({
+          height:'38px',
+          transform:"translateX(2000px) translateY(300px)"
+        })),
+        //Įvažiuojame į tinkmą vietą
+        animate(500, style({
+          height:'0px',
+          transform:"translateX(2000px) translateY(300px)"
+        }) 
+        )
+      ])
+    ])
+  ]
 })
 
 export class NewItemComponent {
   public itemForm: FormGroup;
   public employees: Employee[]=[];
   // public lastNumber: number = 0;
+
+  public captionState = 'normal';
 
   constructor(private itemsService: ItemsService, private employeesService: EmployeesService){
     this.itemForm = new FormGroup({
@@ -81,5 +134,20 @@ export class NewItemComponent {
 
   public removeLocationField() {
     (this.itemForm.get('locations') as FormArray).removeAt(-1)
+  }
+
+  public captionClick() {
+    switch (this.captionState) {
+      case 'normal':
+        this.captionState = 'clicked1';
+        break;
+      case 'clicked1':
+        this.captionState = 'clicked2';
+        break;
+      case 'clicked2':
+        this.captionState = 'normal';
+        break;
+    }
+    // this.captionState = (this.captionState === 'normal')?'clicked':'normal';
   }
 }
